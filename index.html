@@ -1,15 +1,117 @@
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Chess board 2</title>
+        <script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="js/home.js" charset="utf-8"></script>
+        <script defer src="js/config.js " charset="utf-8"></script>
+        <script defer src="js/checkersLogic.js" charset="utf-8"></script>
+        <script defer src="js/drawer.js" charset="utf-8"></script>
 
-<head>
-    <meta charset="utf-8">
-    <title>Chess board 2</title>
-    <script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-    <script defer src="js/config.js " charset="utf-8"></script>
-    <script defer src="js/chess.js" charset="utf-8"></script>
-    <script defer src="js/checkersLogic.js" charset="utf-8"></script>
-    <script defer src="js/checkers.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="css/theme.css" />
+    </head>
 
+    <body>
+        <div id="backimg"></div>
+        <div id="menu" class="center-h">
+            <div style="width: 88%">
+                <label class="big-font"> Board Size:</label>
+                <div class="radio-option">
+                    <input
+                        id="option-one"
+                        name="boardSize"
+                        value="4"
+                        type="radio"
+                    />
+                    <label for="option-one">
+                        <span></span> 4 x 4 (EXTREME)</label
+                    >
+                </div>
+                <div class="radio-option">
+                    <input
+                        id="option-two"
+                        name="boardSize"
+                        value="6"
+                        type="radio"
+                        checked="checked"
+                    />
+                    <label for="option-two"> <span></span> 6 x 6 (HARD)</label>
+                </div>
+                <div class="radio-option">
+                    <input
+                        id="option-three"
+                        name="boardSize"
+                        value="8"
+                        type="radio"
+                    />
+                    <label for="option-three">
+                        <span></span> 8 x 8 (MEDIUM)</label
+                    >
+                </div>
+                <div class="center-h">
+                    <button
+                        onclick="openGame()"
+                        class="action-button shadow animate green"
+                    >
+                        PLAY
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="board-table">
+            <div id="svg-container">
+                <div id="table-menu">
+                    <div>
+                        <div class="standings">
+                            <div class="center-h bold">Your Pieces:</div>
+                            <div id="nr-your-pieces" class="center-h">8</div>
+                        </div>
+                        <div class="standings">
+                            <div class="center-h bold">Opponent Pieces:</div>
+                            <div id="nr-opponent-pieces" class="center-h">
+                                8
+                            </div>
+                        </div>
+                        <div class="center-h" style="margin-top: 100%;">
 
-</head>
+                            <button
+                            onclick="closeGame()"
+                            class="action-button shadow animate red"
+                            >
+                            RESIGN
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div onClick="closeGame()" class="close-btn" style="right: 34px; top: 15px;">&times;</div>
+        </div>
 
+        <!-- Modal content -->
+        <div id="endGameModal" class="modal">
+
+        <div class="modal-content">
+            <span onClick="closeModal()" class="close-btn">&times;</span>
+            <div class="center-h">
+                <div>
+                    <div id="modal-message">
+                       
+                    </div>
+                    <button
+                    onclick="closeModal()"
+                    class="action-button shadow animate red"
+                >
+                    CLOSE
+                </button>
+                </div>
+            </div>
+        </div>
+        </div>  
+    </body>
 </html>

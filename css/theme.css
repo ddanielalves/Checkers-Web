@@ -1,0 +1,174 @@
+body {
+    margin: 0px;
+}
+
+#backimg {
+    background: url("../img/checkers-board.svg");
+    background-repeat: no-repeat;
+
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+
+#menu {
+    position: absolute;
+    top: 55%;
+    padding: 1% 0% 2% 1%;
+    margin: 1%;
+    /* background-color: peachpuff; */
+    width: 19%;
+    font-size: 1.5vw;
+    font-family: MONOSPACE;
+    border: 3px solid black;
+    border-radius: 70px;
+}
+
+#board-table {
+    display: none;
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 70px;
+    box-shadow: 0px 0px 28px 22px rgb(0 0 0 / 70%);
+}
+
+#table-menu {
+    height: 100%;
+    display: inline;
+    float: right;
+}
+
+.center-h {
+    display: flex;
+    justify-content: center;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"] + label {
+    font-weight: 400;
+}
+
+input[type="radio"] + label span {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin: -2px 10px 0 0;
+    vertical-align: middle;
+    cursor: pointer;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 3px solid black;
+}
+
+input[type="radio"] + label span {
+    background-color: #fff;
+}
+
+input[type="radio"]:checked + label {
+    color: #333;
+    font-weight: 700;
+}
+
+input[type="radio"]:checked + label span {
+    background-color: #ff8800;
+    border: 3px solid white;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+input[type="radio"] + label span,
+input[type="radio"]:checked + label span {
+    -webkit-transition: background-color 0.24s linear;
+    -o-transition: background-color 0.24s linear;
+    -moz-transition: background-color 0.24s linear;
+    transition: background-color 0.24s linear;
+}
+
+.close-btn {
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    color: grey;
+    position: absolute;
+    top: 5%;
+    right: 2%;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+.radio-option {
+    padding: 4% 0% 4% 4%;
+}
+
+.big-font {
+    font-size: 2.5vw;
+}
+
+.animate {
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+}
+.action-button {
+    padding: 10px 40px;
+    border-radius: 10px;
+    border: 0px;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
+    margin-top: 25px;
+}
+.green {
+    background-color: #2ecc71;
+    border-bottom: 5px solid #27ae60;
+    text-shadow: 0px -2px #27ae60;
+}
+
+.red {
+    background-color: #dc571a;
+    border-bottom: 5px solid #a5451976;
+    text-shadow: 0px -2px #a5451976;
+}
+
+.action-button:active {
+    transform: translate(0px, 5px);
+    -webkit-transform: translate(0px, 5px);
+}
+
+.standings {
+    margin: 12%;
+    font-size: x-large;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 2%;
+    border: 1px solid #888;
+    width: 25%;
+}

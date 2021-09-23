@@ -1,43 +1,46 @@
-
-
 const clientWidth = document.documentElement.clientWidth;
-boardDimension = 8,
-    boxSize = clientWidth / 2 / boardDimension,
-    boardSize = boardDimension * boxSize,
+var svg;
+
+
+function draw_board() {
+
+    boardDimension = nrows
+    boxSize = clientWidth / 3 / boardDimension
+    boardSize = boardDimension * boxSize
     pieceRadius = boxSize * 0.45
-margin = 100;
+    margin = 0;
 
+    const div = d3.select("#svg-container")
+        .append("div")
+        .attr("id", "gameBoard")
+        .style("float", "left");
 
-const div = d3.select("body")
-    .append("div");
+    // create <svg>
+    svg = div.append("svg")
+        .attr("width", boardSize + "px")
+        .attr("height", boardSize + "px");
 
-// create <svg>
-const svg = div.append("svg")
-    .attr("width", boardSize + "px")
-    .attr("height", boardSize + "px");
-
-// loop through 8 rows and 8 columns to draw the chess board
-for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
-        // draw each chess field
-        const box = svg.append("rect")
-            .attr("x", i * boxSize)
-            .attr("y", j * boxSize)
-            .attr("width", boxSize + "px")
-            .attr("height", boxSize + "px");
-        if ((i + j) % 2 === 0) {
-            box.attr("fill", "beige");
-        } else {
-            box.attr("fill", "gray");
+    // loop through 8 rows and 8 columns to draw the chess board
+    for (let i = 0; i < nrows; i++) {
+        for (let j = 0; j < nrows; j++) {
+            // draw each chess field
+            const box = svg.append("rect")
+                .attr("x", i * boxSize)
+                .attr("y", j * boxSize)
+                .attr("width", boxSize + "px")
+                .attr("height", boxSize + "px");
+            if ((i + j) % 2 === 0) {
+                box.attr("fill", "rgb(240, 217, 181)");
+            } else {
+                box.attr("fill", "rgb(181, 136, 99)");
+            }
         }
     }
 }
 
-
 function draw_pieces() {
     var circles = []
     flag = false
-    console.log(board);
     for (let index = 0; index < board_coords[0].length; index++) {
 
         let line = board_coords[0][index]
@@ -58,24 +61,44 @@ function draw_pieces() {
         }
     }
 
-
-
-    svg.selectAll("circle")
+    var g = svg.selectAll("g")
         .data(circles)
-        .enter().append("circle")
-        .attr("cx", function (d) { return d.c })
-        .attr("cy", function (d) { return d.l })
-        .attr("r", pieceRadius)
-        .attr("fill", piece_color)
-        // .on("mouseover", function (d) { d3.select(this).style("cursor", "move"); })
-        // .on("mouseout", function (d) { })
+        .enter().append("g")
+        .attr("transform", function (d) {
+            return "translate(" + d.c + ", " + d.l + ")";
+        })
         .call(d3.drag()
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended)
         );
 
+
+    g.append("circle")
+        // .attr("cx", function (d) { return d.c })
+        // .attr("cy", function (d) { return d.l })
+        .attr("r", pieceRadius)
+        .attr("fill", piece_color)
+    // .on("mouseover", function (d) { d3.select(this).style("cursor", "move"); })
+    // .on("mouseout", function (d) { })
+
 }
+
+
+function check_for_king(node, row, target) {
+    if ((row == target) & (!node.classed("king"))) {
+
+        node.append("image")
+            .attr("xlink:href", "img/crown.svg")
+            .attr("x", -pieceRadius * 0.5)
+            .attr("y", -pieceRadius * 0.5)
+            .attr("width", pieceRadius)
+            .attr("height", pieceRadius);
+
+        node.classed("king", true)
+    }
+}
+
 
 function piece_color(d) {
     if (d.player == 1) return "white"
@@ -90,15 +113,16 @@ function dragstarted(d) {
 }
 
 function get_piece_obj(piece_nr) {
-    return d3.selectAll("circle").filter(function (d, i) {
-        return d.piece_nr === 0;
+    return d3.selectAll("g").filter(function (d, i) {
+        return d.piece_nr === piece_nr;
     });
 }
 
 
 function dragged(d) {
     if (d3.select(this).classed("active"))
-        d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+        d3.select(this).attr("transform", "translate(" + d3.event.x + ", " + d3.event.y + ")");
+
 }
 
 function move_in_valid_moves(move_to_check) {
@@ -118,11 +142,21 @@ function dragended(d) {
 
         if (move_in_valid_moves(move)) {
             let coords = position_to_coords(position)
-            d3.select(this).attr("cx", d.c = coords.c).attr("cy", d.l = coords.l);
+            node = d3.select(this)
+
+            // node.attr("cx", d.c = coords.c).attr("cy", d.l = coords.l);
+            d.c = coords.c
+            d.l = coords.l
+            node.attr("transform", "translate(" + coords.c + ", " + coords.l + ")");
+
+            check_for_king(node, position.l, 0)
+
             d.piece_nr = destination
             process_move(move)
+
+
         } else {
-            d3.select(this).attr("cx", d.c = d.c).attr("cy", d.l = d.l);
+            d3.select(this).attr("transform", "translate(" + d.c + ", " + d.l + ")");
 
         }
     }
@@ -163,7 +197,6 @@ function check_double_jump(piece_nr) {
 }
 
 
-
 function move_piece(move) {
     [piece, destination] = move
     let [p_l, p_c] = nr_to_position(piece)
@@ -188,6 +221,7 @@ function move_piece(move) {
     } else {
         player_turn = -player_turn
     }
+    current_moves += 1
 }
 
 
@@ -202,15 +236,22 @@ function reverse_board() {
 }
 
 function get_piece_by_nr(piece_nr) {
-    return d3.selectAll("circle").filter(function (d, i) {
+    return d3.selectAll("g").filter(function (d, i) {
         return d.piece_nr === piece_nr;
     });
 }
 
 function remove_piece(piece_nr) {
-    if (player_turn == -1) piece_nr = 31 - piece_nr
-    get_piece_by_nr(piece_nr).remove()
+    if (player_turn == -1) {
+        piece_nr = (nrows * nrows / 2) - 1 - piece_nr
+        players_pieces["1"] -= 1
+    }
+    else {
+        players_pieces["-1"] -= 1
+    }
 
+    get_piece_by_nr(piece_nr).remove()
+    updatePiecesDisplayed()
 }
 
 async function process_opponent() {
@@ -225,8 +266,8 @@ async function process_opponent() {
 }
 
 function action_to_move(action) {
-    let piece = action % 32
-    let direction = (action - piece) / 32
+    let piece = action % (nrows * nrows / 2)
+    let direction = (action - piece) / (nrows * nrows / 2)
     let position = nr_to_position(piece)
     d_l = position[0] + DIRECTIONS[direction][0]
     d_c = position[1] + DIRECTIONS[direction][1]
@@ -290,7 +331,19 @@ function get_random_action() {
 }
 
 async function process_move(move) {
+    console.log("current_moves", current_moves);
     move_piece(move)
+
+    game_ended = gameEnded()
+    if (game_ended[0] == 1) {
+        return setModalMessage(game_ended[1])
+    }
+
     await process_opponent()
+
+    game_ended = gameEnded()
+    if (game_ended[0] == 1) {
+        return setModalMessage(game_ended[1])
+    }
     update_valid_moves()
 }
